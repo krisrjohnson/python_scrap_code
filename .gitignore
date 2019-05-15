@@ -1,0 +1,6 @@
+/PRNet_out/*.obj
+/landmarks/*.png
+/faceplate/*.png
+/original/*.png
+video_raw_capt.avi
+shape_predictor_68_face_landmarks.dat
