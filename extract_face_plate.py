@@ -1,3 +1,7 @@
+'''
+python3 extract_face_plate.py --file video_raw_capt.avi --landmark-model shape_predictor_68_face_landmarks.dat 
+'''
+
 import os
 import cv2
 import dlib
@@ -43,11 +47,12 @@ def main():
                 right_jaw_to_eyebrow = reshape_for_polyline([landmarks[0],landmarks[17]])
                 left_jaw_to_eyebrow = reshape_for_polyline([landmarks[16], landmarks[26]])
 
-                #create polygon of bounding points for face shield - 0:16,26:17,0
-                face_shield_landmark_list = landmarks[0:17]
-                face_shield_landmark_list.append(landmarks[26])
-                for i in range(25, 16, -1): face_shield_landmark_list.append(landmarks[i]) #double check range ends before last item
-                face_shield_landmark_list.append(landmarks[0])
+                # jaw, connect jaw to unibrow, unibrow left to right, connect right unibrow to jaw
+                #create polygon of bounding points for face shield - 0:16,16-26,26:17,17:0
+                #jaw already exists
+                jaw_connect_right = reshape_for_polyline([landmarks[16], landmarks[26]])
+                unibrow_left_to_right = reshape_for_polyline(landmarks[slice(27,16,-1)])
+                jaw_connect_left = reshape_for_polyline([landmarks[17], landmarks[0]])
 
                 color = (255, 255, 255)
                 thickness = 1
@@ -63,9 +68,10 @@ def main():
                 '''
                 cv2.polylines(black_image, [jaw], False, color, thickness)
                 cv2.polylines(black_image, [uni_eyebrow], False, color, thickness)
-                cv2.polylines(black_image, [right_jaw_to_eyebrow], False, color, thickness)
+                cv2.polylines(black_image, [jaw, jaw_connect_right, unibrow_left_to_right, jaw_connect_left], False, color, thickness)
 
                 #so now black image should have white pixels defining the face polygon
+                #TODO: FIXXXXX
                 cv2.fillPoly(black_image, [jaw, left_jaw_to_eyebrow, uni_eyebrow, right_jaw_to_eyebrow], color, thickness)
 
 
