@@ -2,5 +2,7 @@
 /landmarks/*.png
 /faceplate/*.png
 /original/*.png
+/original/kris
+/landmarks/kris
 video_raw_capt.avi
 shape_predictor_68_face_landmarks.dat

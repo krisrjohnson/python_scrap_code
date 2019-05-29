@@ -1,4 +1,4 @@
-#code to run the web-cam
+#code to run the web-cam, ouptut video file
 #Press 'q' to quit live feed
 
 '''
@@ -21,25 +21,28 @@ import os
 
 #TODO: switch to JSON config file
 parser = argparse.ArgumentParser()
-parser.add_argument('-src', '--source', dest='video_source', type=int, default=0, help='Device index of the camera')
 parser.add_argument('-o', '--output', dest='output', type=str, default='video_raw_capt.mp4v', help='output vicdeo filepath')
 parser.add_argument('-fr', '--frames', dest='frames', type=int, default=20, help='number of frames to capture (running 16 fps)')
+parser.add_argument('-src', '--source', dest='video_source', type=int, default=0, help='Device index of the camera')
+parser.add_argument('-os', '--operatiing-system', dest='os', type=str, default='win', help='OS needed to properly encode video')
 args = vars(parser.parse_args())
-
-
 
 print("[INFO] starting video stream...")
 stream = cv2.VideoCapture(args['video_source']) 	#stream object has 16 vars, stream.get(3) is W, .get(4) is H
 time.sleep(2.0) #let webcam warmup
 
+FPS = int(stream.get(5))
 size = (int(stream.get(3)),
         int(stream.get(4)))
 
 #https://gist.github.com/takuma7/44f9ecb028ff00e2132e
-fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
-out = cv2.VideoWriter(args['output'], fourcc, 16, size, True)
+if (args['os'] == 'mac'):
+	fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
+else: 
+	fourcc = cv2.VideoWriter_fourcc('H','2','6','4') #mp4v for windows
+out = cv2.VideoWriter(args['output'], fourcc, FPS, size, True)
 
-print(size) 	#1280x720!
+print(size) 	#640x480 on windows, 1280x720 on mac desktop!
 
 '''
 	Following while loop checks if an img was captured, if not it exits. 

@@ -1,4 +1,11 @@
 #python generate_train_data.py --file angela_merkel_speech.mp4 --num 400 --landmark-model shape_predictor_68_face_landmarks.dat
+#this takes a video and where a face is detected
+    # it ouptuts the frames and the facial landmarks on those frame
+    # to hard coded folders
+
+# should really be called: generate_facial_landmarks.py
+# should be able to take either a video or a series of imgs
+    # splitting video into img should be an imported class
 
 import os
 import cv2
@@ -16,8 +23,8 @@ def reshape_for_polyline(array):
 
 
 def main():
-    os.makedirs('original', exist_ok=True)
-    os.makedirs('landmarks', exist_ok=True)
+    os.makedirs('original/kris', exist_ok=True)
+    os.makedirs('landmarks/kris', exist_ok=True)
 
     cap = cv2.VideoCapture(args.filename)
     fps = video.FPS().start()
@@ -65,8 +72,8 @@ def main():
             # Display the resulting frame
             count += 1
             print(count)
-            cv2.imwrite("original/{}.png".format(count), frame)
-            cv2.imwrite("landmarks/{}.png".format(count), black_image)
+            cv2.imwrite("original/kris/{}.png".format(count), frame)
+            cv2.imwrite("landmarks/kris/{}.png".format(count), black_image)
             fps.update()
 
             print('[INFO] elapsed time: {:.2f}'.format(time.time() - t))
